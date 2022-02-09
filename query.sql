@@ -80,3 +80,4 @@ SELECT t.name, t.surname, c.name, d.name FROM `course_teacher` AS ct JOIN (`teac
 SELECT DISTINCT t.id, t.name, t.surname FROM `course_teacher` AS ct JOIN (`teachers` AS t, `courses` AS c, degrees as deg, departments AS dep) ON (ct.teacher_id = t.id AND ct.course_id = c.id AND c.degree_id = deg.id AND deg.department_id = dep.id) WHERE dep.name = 'Dipartimento di Matematica'
 
 -- 7. BONUS: Selezionare per ogni studente quanti tentativi d’esame ha sostenuto per superare ciascuno dei suoi esami
+SELECT COUNT(*) as failed_exams, s.name, s.surname FROM `exam_student` AS es INNER JOIN (students as s, exams AS ex) ON (es.student_id = s.id AND es.exam_id = ex.id) WHERE es.vote < 18 GROUP BY es.student_id
