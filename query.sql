@@ -9,7 +9,7 @@ SELECT COUNT(id) FROM `courses` WHERE `cfu` > 10
 
 
 -- 3. Selezionare tutti gli studenti che hanno più di 30 anni
-SELECT * FROM `students` WHERE (YEAR(CURDATE()) - YEAR(date_of_birth)) > 30
+SELECT * FROM `students` WHERE ADDDATE(date_of_birth, INTERVAL 30 YEAR) <= CURDATE()
 
 
 -- 4. Selezionare tutti i corsi del primo semestre del primo anno di un qualsiasi corso di laurea (286)
@@ -51,3 +51,27 @@ SELECT ROUND(AVG(vote), 2), exam_id FROM `exam_student` GROUP BY exam_id
 
 -- 4. Contare quanti corsi di laurea ci sono per ogni dipartiment
 SELECT COUNT(*), department_id FROM `degrees` GROUP BY department_id
+
+
+
+-- QUERY CON JOIN   
+
+-- 1. Selezionare tutti gli studenti iscritti al Corso di Laurea in Economia
+SELECT * FROM students as s, degrees as d WHERE d.id = s.degree_id AND d.name = 'Corso di Laurea in Economia'
+SELECT * FROM students as s INNER JOIN degrees as d ON d.id = s.degree_id WHERE d.name = 'Corso di Laurea in Economia'
+
+-- 2. Selezionare tutti i Corsi di Laurea del Dipartimento di Neuroscienze
+SELECT * FROM degrees AS deg, departments AS dep WHERE deg.department_id = dep.id AND dep.name = 'Dipartimento di Neuroscienze'
+SELECT * FROM degrees AS deg INNER JOIN departments AS dep ON deg.department_id = dep.id WHERE dep.name = 'Dipartimento di Neuroscienze'
+
+-- 3. Selezionare tutti i corsi in cui insegna Fulvio Amato (id=44)
+SELECT c.name, c.id FROM `course_teacher` AS ct, `teachers` AS t,`courses` AS c WHERE ct.course_id = c.id AND ct.teacher_id = t.id AND t.id = 44
+SELECT c.name, c.id FROM `course_teacher` AS ct INNER JOIN `teachers` AS t ON ct.teacher_id = t.id INNER JOIN `courses` AS c ON ct.course_id = c.id WHERE t.id = 44
+
+-- 4. Selezionare tutti gli studenti con i dati relativi al corso di laurea a cui sono iscritti e il relativo dipartimento, in ordine alfabetico per cognome e nome
+
+
+
+-- 5. Selezionare tutti i corsi di laurea con i relativi corsi e insegnanti
+-- 6. Selezionare tutti i docenti che insegnano nel Dipartimento di Matematica (54)
+-- 7. BONUS: Selezionare per ogni studente quanti tentativi d’esame ha sostenuto per superare ciascuno dei suoi esami
