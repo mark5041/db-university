@@ -66,12 +66,17 @@ SELECT * FROM degrees AS deg INNER JOIN departments AS dep ON deg.department_id 
 
 -- 3. Selezionare tutti i corsi in cui insegna Fulvio Amato (id=44)
 SELECT c.name, c.id FROM `course_teacher` AS ct, `teachers` AS t,`courses` AS c WHERE ct.course_id = c.id AND ct.teacher_id = t.id AND t.id = 44
-SELECT c.name, c.id FROM `course_teacher` AS ct INNER JOIN `teachers` AS t ON ct.teacher_id = t.id INNER JOIN `courses` AS c ON ct.course_id = c.id WHERE t.id = 44
+SELECT c.name, c.id FROM `course_teacher` AS ct INNER JOIN (`teachers` AS t, `courses` AS c) ON (ct.teacher_id = t.id AND ct.course_id = c.id) WHERE t.id = 44
 
 -- 4. Selezionare tutti gli studenti con i dati relativi al corso di laurea a cui sono iscritti e il relativo dipartimento, in ordine alfabetico per cognome e nome
-
-
+SELECT s.name, s.surname, deg.name, dep.name FROM students as s, degrees as deg, departments AS dep WHERE deg.id = s.degree_id AND deg.department_id = dep.id ORDER BY s.surname
+SELECT s.name, s.surname, deg.name, dep.name FROM students as s INNER JOIN (degrees as deg, departments AS dep) ON (deg.id = s.degree_id AND deg.department_id = dep.id) ORDER BY s.surname
 
 -- 5. Selezionare tutti i corsi di laurea con i relativi corsi e insegnanti
+SELECT t.name, t.surname, c.name, d.name FROM `course_teacher` AS ct, `teachers` AS t,`courses` AS c, degrees as d WHERE ct.course_id = c.id AND ct.teacher_id = t.id AND c.degree_id = d.id
+SELECT t.name, t.surname, c.name, d.name FROM `course_teacher` AS ct JOIN (`teachers` AS t, `courses` AS c, degrees as d) ON (ct.teacher_id = t.id AND ct.course_id = c.id AND c.degree_id = d.id) 
+
 -- 6. Selezionare tutti i docenti che insegnano nel Dipartimento di Matematica (54)
+SELECT DISTINCT t.id, t.name, t.surname FROM `course_teacher` AS ct JOIN (`teachers` AS t, `courses` AS c, degrees as deg, departments AS dep) ON (ct.teacher_id = t.id AND ct.course_id = c.id AND c.degree_id = deg.id AND deg.department_id = dep.id) WHERE dep.name = 'Dipartimento di Matematica'
+
 -- 7. BONUS: Selezionare per ogni studente quanti tentativi d’esame ha sostenuto per superare ciascuno dei suoi esami
